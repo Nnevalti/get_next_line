@@ -5,70 +5,74 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vdescham <vdescham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/17 17:52:10 by vdescham          #+#    #+#             */
-/*   Updated: 2019/10/17 19:53:40 by vdescham         ###   ########.fr       */
+/*   Created: 2019/10/17 16:58:42 by vdescham          #+#    #+#             */
+/*   Updated: 2019/10/17 17:46:46 by vdescham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line.h"
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <stdio.h>
 
-int		ft_return(char	**str, char **line)
+int		check_error(int fd, char **line)
 {
-	int		i;
-	char	*tmp;
+	if (fd == -1 || !line || BUFFER_SIZE < 1)
+		return (-1);
+	return (1);
+}
 
-	i = 0;
-	while ((*str)[i] != '\n' && (*str)[i] != '\0')
-		i++;
-	*line = ft_substr(*str, 0, i);
-	if ((*str)[i] == '\n')
+void	ft_readline(int fd, char **str)
+{
+	int		res;
+	char	rdchar[BUFFER_SIZE + 1];
+
+	while ((res = read(fd, rdchar, BUFFER_SIZE)) > 0)
 	{
-		tmp = ft_strdup(&(*str)[i + 1]);
-		free(*str);
-		*str = tmp;
-		return (1);
-	}
-	else
-	{
-		free(*str);
-		str = NULL;
-		return (0); // here last line not displayed bc of return 0
+		rdchar[res] = '\0';
+		if (*str)
+		{
+			*str = ft_strjoin(*str, rdchar);
+		}
+		else
+		{
+			*str = ft_strdup(rdchar);
+		}
+		if(ft_strchr(*str, '\n'))
+			break ;
 	}
 }
 
 int		get_next_line(int fd, char **line)
 {
-	int				res;
+	int				i;
 	static char		*str;
-	char			buff[BUFFER_SIZE + 1];
-	char			*tmp;
-	
-	if (fd < 0 || !line || read(fd, buff, 0) < 0 || BUFFER_SIZE < 1) // Check error
+
+	i = 0;
+	if (check_error(fd, line) == -1 || read(fd, str, 0) < 0)
 		return (-1);
-	while ((res = read(fd, buff, BUFFER_SIZE)) > 0)
+	ft_readline(fd, &str);
+	if (!str || !*str)
+		return (0);
+	while (str[i] != '\n' && str[i])
+		i++;
+	if (i == 0 && !str[i])
+		return (0);
+	else
 	{
-		buff[res] = '\0';
-		if (!str || !*str)
+		*line = ft_substr(str, 0, i);
+		if (str[i] == '\n')
 		{
-			str = ft_strdup(buff);
+			str = &str[i + 1];
 		}
-		else
-		{
-			tmp = ft_strjoin(str, buff);
-			free(str);
-			str = tmp;
-		}
-		if (ft_strchr(str, '\n'))
-			break ;
+		else if (str[i] == '\0')
+			str = &str[i];
 	}
-	if (res < 0)
-		return (-1);
-	return (ft_return(&str, line));
+	return (1);
 }
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 int		main(int ac, char **av)
 {
