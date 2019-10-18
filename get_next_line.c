@@ -6,7 +6,7 @@
 /*   By: vdescham <vdescham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 17:52:10 by vdescham          #+#    #+#             */
-/*   Updated: 2019/10/17 19:53:40 by vdescham         ###   ########.fr       */
+/*   Updated: 2019/10/18 11:48:17 by vdescham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -22,6 +22,8 @@ int		ft_return(char	**str, char **line)
 	char	*tmp;
 
 	i = 0;
+	if (*str == NULL)
+		return (0);
 	while ((*str)[i] != '\n' && (*str)[i] != '\0')
 		i++;
 	*line = ft_substr(*str, 0, i);
@@ -34,9 +36,8 @@ int		ft_return(char	**str, char **line)
 	}
 	else
 	{
-		free(*str);
-		str = NULL;
-		return (0); // here last line not displayed bc of return 0
+		*str = NULL;
+		return (1); // here last line not displayed bc of return 0
 	}
 }
 
@@ -54,7 +55,9 @@ int		get_next_line(int fd, char **line)
 		buff[res] = '\0';
 		if (!str || !*str)
 		{
-			str = ft_strdup(buff);
+			tmp = ft_strdup(buff);
+			free(str);
+			str = tmp;
 		}
 		else
 		{
