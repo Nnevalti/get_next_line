@@ -6,9 +6,10 @@
 /*   By: vdescham <vdescham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 17:52:10 by vdescham          #+#    #+#             */
-/*   Updated: 2019/10/18 11:48:17 by vdescham         ###   ########.fr       */
+/*   Updated: 2019/10/18 13:26:28 by vdescham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line.h"
 
 #include <sys/types.h>
@@ -16,7 +17,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-int		ft_return(char	**str, char **line)
+int		ft_return(char **str, char **line)
 {
 	int		i;
 	char	*tmp;
@@ -37,7 +38,7 @@ int		ft_return(char	**str, char **line)
 	else
 	{
 		*str = NULL;
-		return (1); // here last line not displayed bc of return 0
+		return (1);
 	}
 }
 
@@ -47,8 +48,8 @@ int		get_next_line(int fd, char **line)
 	static char		*str;
 	char			buff[BUFFER_SIZE + 1];
 	char			*tmp;
-	
-	if (fd < 0 || !line || read(fd, buff, 0) < 0 || BUFFER_SIZE < 1) // Check error
+
+	if (fd < 0 || !line || read(fd, buff, 0) < 0 || BUFFER_SIZE < 1)
 		return (-1);
 	while ((res = read(fd, buff, BUFFER_SIZE)) > 0)
 	{
@@ -82,7 +83,7 @@ int		main(int ac, char **av)
 	(void)ac;
 	i = 1;
 	fd = open(av[1], O_RDONLY);
-	while((get_next_line(fd, &line)) > 0)
+	while ((get_next_line(fd, &line)) > 0)
 	{
 		printf("Ligne %d : %s\n", i, line);
 		i++;

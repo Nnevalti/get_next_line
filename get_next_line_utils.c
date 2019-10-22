@@ -6,13 +6,12 @@
 /*   By: vdescham <vdescham@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 17:51:36 by vdescham          #+#    #+#             */
-/*   Updated: 2019/10/17 17:51:41 by vdescham         ###   ########.fr       */
+/*   Updated: 2019/10/18 13:24:23 by vdescham         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-#include <stdio.h>
 size_t	ft_strlen(const char *s)
 {
 	size_t i;
@@ -26,7 +25,7 @@ size_t	ft_strlen(const char *s)
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int			i;
-	char	*str;
+	char		*str;
 
 	i = 0;
 	if (!(str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
